@@ -1,5 +1,5 @@
 import { buildApp } from './app.js';
-import { loadConfig } from './config.js';
+import { ConfigError, loadConfig, type Config } from './config.js';
 
 const [major = 0, minor = 0] = process.versions.node.split('.').map(Number);
 if (major !== 24 || minor < 2) {
@@ -9,8 +9,16 @@ if (major !== 24 || minor < 2) {
   process.exit(1);
 }
 
-const config = loadConfig();
-const app = buildApp({ logger: true });
+let config: Config;
+try {
+  config = loadConfig();
+} catch (error) {
+  if (!(error instanceof ConfigError)) throw error;
+  console.error(error.message);
+  process.exit(1);
+}
+
+const app = buildApp({ token: config.token, server: { logger: true } });
 
 // systemd arrête le service par SIGTERM : on ferme proprement les connexions.
 for (const signal of ['SIGINT', 'SIGTERM'] as const)
