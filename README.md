@@ -42,12 +42,17 @@ npm start               # http://127.0.0.1:8643/health
 
 Le pont n'écoute que sur `127.0.0.1`, ce n'est pas réglable. Il refuse de démarrer sans `BRIDGE_TOKEN` (32 caractères au moins) : c'est le jeton à coller dans Cornelius, **Administration → Agents → Jeton de connexion**. Toutes les routes l'exigent, sauf `/health`.
 
-| Route                  | Rôle                                                                    |
-| ---------------------- | ----------------------------------------------------------------------- |
-| `GET /health`          | État du pont, sans jeton                                                |
-| `GET /v1/capabilities` | Fonctions annoncées à Cornelius (format Hermes)                         |
-| `GET /v1/toolsets`     | Outils : `terminal` (`claude_code`)                                     |
-| `GET /v1/skills`       | Compétence `claude-code`, lue par Cornelius pour choisir quand déléguer |
+| Route                    | Rôle                                                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `GET /health`            | État du pont, sans jeton                                                                                   |
+| `GET /v1/capabilities`   | Fonctions annoncées à Cornelius (format Hermes)                                                            |
+| `GET /v1/toolsets`       | Outils : `terminal` (`claude_code`)                                                                        |
+| `GET /v1/skills`         | Compétence `claude-code`, lue par Cornelius pour choisir quand déléguer                                    |
+| `POST /v1/runs`          | Nouvelle tâche (`input`, `session_id`, `instructions`, en-tête `Idempotency-Key`) → `202`                  |
+| `GET /v1/runs/:id`       | Suivi : `queued`, `running`, `stopping`, `completed` (avec `output`), `failed`, `cancelled`, `interrupted` |
+| `POST /v1/runs/:id/stop` | Arrêt de la tâche (retirée de la file, ou interrompue)                                                     |
+
+Une seule tâche tourne à la fois ; jusqu'à 3 autres attendent leur tour, au-delà la demande est refusée (`409`). Les tâches vivent en mémoire : un redémarrage du pont les oublie. Pour l'instant, un **faux exécutant** répond après quelques secondes en reprenant la demande ; Claude Code le remplacera (CC-09).
 
 ## Licence
 
