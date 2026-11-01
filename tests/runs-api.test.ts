@@ -121,3 +121,23 @@ test('les routes des tâches exigent le jeton', async () => {
     assert.equal((await server.inject({ method, url, payload: {} })).statusCode, 401, url);
   await server.close();
 });
+
+test('un champ inconnu (future version de Cornelius) est accepté', async () => {
+  const server = app();
+  const response = await submit(server, { input: 'ok', nouveau_champ: true, model: 'x' });
+  assert.equal(response.statusCode, 202);
+  await server.close();
+});
+
+test('un corps qui n’est pas du JSON est refusé', async () => {
+  const server = app();
+  const response = await server.inject({
+    method: 'POST',
+    url: '/v1/runs',
+    headers: { ...auth, 'content-type': 'text/plain' },
+    payload: 'input=ok',
+  });
+  // Fastify lit le texte brut, puis le schéma (objet attendu) le refuse.
+  assert.equal(response.statusCode, 400);
+  await server.close();
+});
