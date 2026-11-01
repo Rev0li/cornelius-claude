@@ -1,20 +1,24 @@
 ---
 name: Ticket
 about: Une tâche technique (une issue = une branche = une PR)
-title: "[ID] Titre court"
-labels: ""
+title: '[ID] Titre court'
+labels: ''
 ---
 
 ## 🎯 Objectif
+
 <!-- Ce qui doit exister à la fin, en 2-4 phrases. -->
 
 **Fini quand** : <!-- critère vérifiable -->
 
 ## ❓ Questions à trancher avant de coder
+
 <!-- ⭐ = recommandation. Réponses en commentaire, puis reportées ici. -->
+
 1.
 
 ## ✅ Definition of Done
+
 - [ ] Code implémenté
 - [ ] Tests passent (unitaires + intégration)
 - [ ] Sécurité vérifiée (si auth / secrets / RBAC concernés)
