@@ -41,3 +41,7 @@ npm start               # http://127.0.0.1:8643/health
 | `npm run format:check` | Mise en forme (Prettier)  |
 
 Le pont n'écoute que sur `127.0.0.1`, ce n'est pas réglable.
+
+## Licence
+
+[MIT](LICENSE)
